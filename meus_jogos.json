@@ -1,0 +1,7 @@
+{
+    "Novo Jogo 1": {
+        "exe": "",
+        "runner": "wine",
+        "args": ""
+    }
+}
