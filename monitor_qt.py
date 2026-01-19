@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 from PyQt6.QtWidgets import (QApplication, QWidget, QGridLayout, QVBoxLayout, QHBoxLayout,
                              QLabel, QProgressBar, QFrame, QTableWidget, QTableWidgetItem, 
                              QHeaderView, QPushButton, QMessageBox)
-from PyQt6.QtCore import QTimer, Qt, QSettings, QThread, pyqtSignal, QPoint, QSize
-from PyQt6.QtGui import QColor
+from PyQt6.QtCore import QTimer, Qt, QSettings, QThread, pyqtSignal, QPoint, QSize, QUrl
+from PyQt6.QtGui import QColor, QCursor, QDesktopServices
 
 # ==========================================
 # 🛠️ FUNÇÕES AUXILIARES DE HARDWARE
@@ -263,8 +263,32 @@ class DashboardFinal(QWidget):
         k = platform.release().split('-')[0]
         self.lbl_sys = QLabel(f"🐧 CachyOS Linux • Kernel {k}"); self.lbl_sys.setStyleSheet("color: #7aa2f7; font-size: 16px; font-weight: bold; border: none;")
         status_layout.addWidget(self.lbl_sys); status_layout.addStretch()
+        
         self.lbl_uptime = QLabel("Ligado há: ..."); self.lbl_uptime.setStyleSheet("color: #e0af68; font-size: 16px; font-weight: bold; border: none;")
         status_layout.addWidget(self.lbl_uptime); status_layout.addStretch()
+
+        # ==============================================
+        # NOVO: Botão Sobre
+        # ==============================================
+        self.btn_sobre = QPushButton("Sobre")
+        self.btn_sobre.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        self.btn_sobre.setStyleSheet("""
+            QPushButton {
+                background-color: #7aa2f7;
+                color: #1a1b26;
+                font-weight: bold;
+                border-radius: 5px;
+                padding: 5px 10px;
+            }
+            QPushButton:hover {
+                background-color: #a9b1d6;
+            }
+        """)
+        self.btn_sobre.clicked.connect(self.abrir_sobre)
+        status_layout.addWidget(self.btn_sobre)
+        
+        status_layout.addSpacing(15) # Espacinho
+
         self.lbl_clock = QLabel("00:00:00"); self.lbl_clock.setStyleSheet("color: #2ecc71; font-size: 24px; font-weight: bold; border: none;")
         status_layout.addWidget(self.lbl_clock); main_layout.addWidget(status_bar)
 
@@ -284,6 +308,27 @@ class DashboardFinal(QWidget):
         self.thread = WorkerThread()
         self.thread.dados_atualizados.connect(self.atualizar_interface)
         self.thread.start()
+
+    # ==============================================
+    # NOVO: Função do Menu Sobre
+    # ==============================================
+    def abrir_sobre(self):
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Sobre")
+        msg.setIcon(QMessageBox.Icon.Information)
+        msg.setStyleSheet("QMessageBox { background-color: #1a1b26; color: white; } QLabel { color: white; } QPushButton { background-color: #7aa2f7; color: #1a1b26; font-weight: bold; border-radius: 5px; padding: 5px; }")
+        
+        texto = """
+        <h3 style='color: #7aa2f7;'>Agildo Monitor Ultimate</h3>
+        <p><b>Versão 1.0</b> - CachyOS Edition</p>
+        <p>Monitor de sistema focado em performance e visual moderno.</p>
+        <br>
+        <p>Desenvolvido por: <b style='color: #e0af68;'>Agildo Gomes</b></p>
+        <p><a href='https://github.com/juglesbass/AgildoMonitor' style='color: #bb9af7;'>Visite o GitHub do Projeto</a></p>
+        """
+        msg.setText(texto)
+        msg.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
+        msg.exec()
 
     def forcar_posicao(self):
         pos = self.settings.value("pos")

@@ -29,12 +29,12 @@ class CentralAgildoUltimate(ctk.CTk):
         self.lbl_title.place(relx=0.5, rely=0.4, anchor="center")
         
         self.lbl_subtitle = ctk.CTkLabel(self.header, text="AGILDO SYSTEMS  •  CACHYOS  •  MANAUS", 
-                                      font=("Roboto", 18, "bold"), text_color="#666")
+                                      font=("Roboto", 17, "bold"), text_color="#666")
         self.lbl_subtitle.place(relx=0.5, rely=0.85, anchor="center")
 
         # --- CONTAINER DOS CARDS ---
         self.container = ctk.CTkFrame(self, fg_color="transparent")
-        self.container.pack(pady=10, padx=80, fill="both", expand=True)
+        self.container.pack(pady=10, padx=60, fill="both", expand=True)
 
         # 1. HARDWARE (Verde)
         self.criar_smart_card("📊", "MONITOR DE HARDWARE", "Vigiar Xeon E5-2640 e RX 6600", "#2ecc71", self.abrir_hardware)
@@ -68,17 +68,17 @@ class CentralAgildoUltimate(ctk.CTk):
         card.pack_propagate(False) 
 
         # 2. O ÍCONE (Esquerda)
-        lbl_ico = ctk.CTkLabel(card, text=icone, font=("Roboto", 45))
+        lbl_ico = ctk.CTkLabel(card, text=icone, font=("Roboto",35))
         lbl_ico.pack(side="left", padx=(30, 20)) # Margem esquerda 30, direita 20
 
         # 3. BLOCO DE TEXTO (Meio)
         frame_texto = ctk.CTkFrame(card, fg_color="transparent")
         frame_texto.pack(side="left", fill="y", pady=20)
 
-        lbl_tit = ctk.CTkLabel(frame_texto, text=titulo, font=("Roboto", 26, "bold"), text_color="white")
+        lbl_tit = ctk.CTkLabel(frame_texto, text=titulo, font=("Roboto", 16, "bold"), text_color="white")
         lbl_tit.pack(anchor="w") # Alinha a esquerda dentro do bloco
 
-        lbl_sub = ctk.CTkLabel(frame_texto, text=sub, font=("Roboto", 16), text_color="#AAAAAA")
+        lbl_sub = ctk.CTkLabel(frame_texto, text=sub, font=("Roboto", 12), text_color="#AAAAAA")
         lbl_sub.pack(anchor="w")
 
         # 4. SETA INDICATIVA (Direita - Decorativa)
