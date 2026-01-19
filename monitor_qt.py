@@ -16,6 +16,7 @@ from PyQt6.QtGui import QColor, QCursor, QDesktopServices, QAction, QIcon
 
 # VERSÃO ATUAL DO SOFTWARE
 VERSAO_ATUAL = "1.0"
+# Link para o arquivo de versão no seu GitHub
 URL_VERSION = "https://raw.githubusercontent.com/juglesbass/AgildoMonitor/main/version.txt"
 
 # ==========================================
@@ -47,7 +48,6 @@ class WorkerThread(QThread):
         self.nome_cpu = pegar_nome_cpu_real()
 
     def ler_arquivo(self, path):
-        # CORREÇÃO AQUI: Identação correta
         try:
             with open(path) as f:
                 return f.read().strip()
@@ -397,22 +397,29 @@ class DashboardFinal(QWidget):
         self.show()
         self.settings.setValue("ontop", checked)
 
+    # 🔴 CORREÇÃO AQUI: Removemos o aviso bloqueante
     def checar_updates(self):
-        QMessageBox.information(self, "Verificando", "Conectando ao servidor do GitHub...")
+        # Muda o cursor para indicar que está pensando
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        
         try:
             with urllib.request.urlopen(URL_VERSION) as response:
                 versao_remota = response.read().decode('utf-8').strip()
             
+            # Volta o cursor ao normal
+            QApplication.restoreOverrideCursor()
+
             if versao_remota != VERSAO_ATUAL:
                 res = QMessageBox.question(self, "Atualização Disponível!", 
-                                     f"Nova versão encontrada: {versao_remota}\nVocê tem a: {VERSAO_ATUAL}\n\nDeseja ir para a página de download?",
+                                     f"Nova versão: {versao_remota}\nSua versão: {VERSAO_ATUAL}\n\nDeseja ir para a página de download?",
                                      QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
                 if res == QMessageBox.StandardButton.Yes:
                     QDesktopServices.openUrl(QUrl("https://github.com/juglesbass/AgildoMonitor/releases"))
             else:
-                QMessageBox.information(self, "Tudo certo", f"Você já está usando a versão mais recente ({VERSAO_ATUAL}).")
+                QMessageBox.information(self, "Tudo Certo", f"Você já tem a versão mais recente ({VERSAO_ATUAL}).")
         except:
-            QMessageBox.warning(self, "Erro", "Não foi possível verificar atualizações.\nVerifique sua internet ou tente mais tarde.")
+            QApplication.restoreOverrideCursor()
+            QMessageBox.warning(self, "Erro de Conexão", "Não foi possível verificar. Cheque sua internet.")
 
     def abrir_sobre(self):
         msg = QMessageBox(self)
